@@ -812,6 +812,12 @@ function installWARP(){
 
 }
 
+function installWARP2(){
+
+	wget -N https://raw.githubusercontent.com/fscarmen/warp/main/menu.sh && bash menu.sh [option] [lisence]
+
+}
+
 
 
 
@@ -830,7 +836,8 @@ function start_menu(){
     green " =================================================="
     green " 1. 申请域名SSL证书"
 	green " 2. 安装X-UI面板"
-	green " 3. 安装WARP客户端"
+	green " 3. WARP_kkkyg"
+	green " 4. WARP_fscsrmen"
 
     green " 0. exit"
 
@@ -849,6 +856,9 @@ function start_menu(){
 		3 )
             installWARP
         ;;
+		4 )
+            installWARP2
+        ;;	
         0 )
             exit 1
         ;;
