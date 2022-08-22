@@ -820,6 +820,13 @@ function installWARP2(){
 
 
 
+function installWARP3(){
+
+	wget -N https://raw.githubusercontent.com/fscarmen/warp/main/warp-go.sh && bash warp-go.sh [option] [lisence]
+
+}
+
+
 
 
 function start_menu(){
@@ -838,6 +845,7 @@ function start_menu(){
 	green " 2. 安装X-UI面板"
 	green " 3. WARP_kkkyg"
 	green " 4. WARP_fscsrmen"
+	green " 5. WARP-GO_fscsrmen"
 
     green " 0. exit"
 
@@ -858,7 +866,10 @@ function start_menu(){
         ;;
 		4 )
             installWARP2
-        ;;	
+        ;;
+		5 )
+            installWARP3
+        ;;
         0 )
             exit 1
         ;;
