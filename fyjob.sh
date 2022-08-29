@@ -805,6 +805,12 @@ function installXUI(){
 
 }
 
+function installXUI2(){
+
+	bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)
+
+}
+
 
 function installWARP(){
 
@@ -842,10 +848,11 @@ function start_menu(){
     green " Linux 常用工具 一键安装脚本 | 2022-8-15 | 系统支持：centos7+ / debian9+ / ubuntu16.04+"
     green " =================================================="
     green " 1. 申请域名SSL证书"
-	green " 2. 安装X-UI面板"
-	green " 3. WARP_kkkyg"
-	green " 4. WARP_fscsrmen"
-	green " 5. WARP-GO_fscsrmen"
+	green " 2. 安装X-UI面板(原版)"
+	green " 3. 安装X-UI面板(修改版)"
+	green " 4. WARP_kkkyg"
+	green " 5. WARP_fscsrmen"
+	green " 6. WARP-GO_fscsrmen"
 
     green " 0. exit"
 
@@ -862,12 +869,15 @@ function start_menu(){
             installXUI
         ;;
 		3 )
-            installWARP
+            installXUI2
         ;;
 		4 )
-            installWARP2
+            installWARP
         ;;
 		5 )
+            installWARP2
+        ;;
+		6 )
             installWARP3
         ;;
         0 )
