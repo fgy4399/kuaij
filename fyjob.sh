@@ -893,6 +893,7 @@ function start_menu(){
         0 )
             exit 1
         ;;
+	
         * )
             clear
             red "请输入正确数字 !"
