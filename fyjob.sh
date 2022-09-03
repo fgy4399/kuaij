@@ -886,9 +886,6 @@ function start_menu(){
         ;;
 		6 )
             installWARP3
-        ;;
-		7 )
-            upgradeScript
         ;;	
         0 )
             exit 1
