@@ -832,7 +832,13 @@ function installWARP3(){
 
 }
 
-
+function upgradeScript(){
+    wget -Nq --no-check-certificate -O ./linux_install_software.sh "https://raw.githubusercontent.com/jinwyp/one_click_script/master/linux_install_software.sh"
+    green " 本脚本升级成功! "
+    chmod +x ./linux_install_software.sh
+    sleep 2s
+    exec "./linux_install_software.sh"
+}
 
 
 function start_menu(){
@@ -853,6 +859,7 @@ function start_menu(){
 	green " 4. WARP_kkkyg"
 	green " 5. WARP_fscsrmen"
 	green " 6. WARP-GO_fscsrmen"
+	green " 7. 工具集合"
 
     green " 0. exit"
 
@@ -880,6 +887,10 @@ function start_menu(){
 		6 )
             installWARP3
         ;;
+        ;;
+		7 )
+            upgradeScript
+        ;;	
         0 )
             exit 1
         ;;
