@@ -841,6 +841,11 @@ function upgradeScript(){
 }
 
 
+debian(){
+	curl -fLO https://raw.githubusercontent.com/bohanyang/debi/master/debi.sh && chmod a+rx debi.sh && ./debi.sh --install 'curl wget neofetch htop net-tools git' --hostname liu --bbr --timezone Asia/Shanghai --cloud-kernel --user root --password ffffff && shutdown -r now
+}
+
+
 function start_menu(){
     clear
 
@@ -860,6 +865,7 @@ function start_menu(){
 	green " 5. WARP_fscsrmen"
 	green " 6. WARP-GO_fscsrmen"
 	green " 7. 工具集合"
+	green " 8. DD最新的diban11系统默认密码ffffff"
 
     green " 0. exit"
 
@@ -889,6 +895,9 @@ function start_menu(){
         ;;
 		7 )
             upgradeScript
+        ;;
+		8 )
+            debian
         ;;
         0 )
             exit 1
