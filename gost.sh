@@ -167,7 +167,7 @@ function Status_ct(){
 		echo -e " 状态：${Green_font_prefix}${status}${Font_color_suffix}"
 		echo
 	else
-		status="未检测到gost"
+		status="未检测到gost配置系统后台运行"
 		echo
 		echo -e " 状态：${Red_font_prefix}${status}${Font_color_suffix}"
 		echo
