@@ -157,14 +157,20 @@ function Restart_ct() {
 function Status_ct(){
 	status=''
 	if  systemctl status gost | grep -Eqi "inactive" ; then
-		status="gost已停用"   
-		echo -e "${Red_font_prefix}${status}${Font_color_suffix}"
+		status="gost已停用"
+		echo
+		echo -e " 状态：${Red_font_prefix}${status}${Font_color_suffix}"
+		echo
 	elif  systemctl status gost | grep -Eqi "active" ; then
 		status="gost已运行"
-		echo -e "${Green_font_prefix}${status}${Font_color_suffix}"
+		echo
+		echo -e " 状态：${Green_font_prefix}${status}${Font_color_suffix}"
+		echo
 	else
 		status="未检测到gost"
-		echo -e "${Red_font_prefix}${status}${Font_color_suffix}"
+		echo
+		echo -e " 状态：${Red_font_prefix}${status}${Font_color_suffix}"
+		echo
 	fi
 	
 }
@@ -868,14 +874,14 @@ cron_restart() {
 }
 
 update_sh() {
-  ol_version=$(curl -L -s --connect-timeout 5 https://raw.githubusercontent.com/KANIKIG/Multi-EasyGost/master/gost.sh | grep "shell_version=" | head -1 | awk -F '=|"' '{print $3}')
+  ol_version=$(curl -L -s --connect-timeout 5 https://raw.githubusercontent.com/fgy4399/kuaij/main/gost.sh | grep "shell_version=" | head -1 | awk -F '=|"' '{print $3}')
   if [ -n "$ol_version" ]; then
     if [[ "$shell_version" != "$ol_version" ]]; then
       echo -e "存在新版本，是否更新 [Y/N]?"
       read -r update_confirm
       case $update_confirm in
       [yY][eE][sS] | [yY])
-        wget -N --no-check-certificate https://raw.githubusercontent.com/KANIKIG/Multi-EasyGost/master/gost.sh
+        wget -N --no-check-certificate https://raw.githubusercontent.com/fgy4399/kuaij/main/gost.sh
         echo -e "更新完成"
         exit 0
         ;;
@@ -974,6 +980,6 @@ case "$num" in
   cert
   ;;
 *)
-  echo "请输入正确数字 [1-9]"
+  echo "请输入正确数字 [1-12]"
   ;;
 esac
