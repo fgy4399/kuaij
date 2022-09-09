@@ -847,7 +847,7 @@ debian(){
 
 
 gost(){
-	bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)	
+	bash <(curl -Ls https://raw.githubusercontent.com/fgy4399/kuaij/main/gost.sh)	
 }
 
 function start_menu(){
