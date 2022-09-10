@@ -850,6 +850,10 @@ gost(){
 	bash <(curl -Ls https://raw.githubusercontent.com/fgy4399/kuaij/main/gost.sh)	
 }
 
+vpsTest(){
+	bash <(wget -qO- --no-check-certificate https://gitlab.com/spiritysdx/za/-/raw/main/ecs.sh)
+}
+
 function start_menu(){
     clear
 
@@ -906,6 +910,9 @@ function start_menu(){
         ;;
 		9 )
             gost
+        ;;
+		10 )
+            vpsTest
         ;;
         0 )
             exit 1
