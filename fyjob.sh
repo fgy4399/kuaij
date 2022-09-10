@@ -875,6 +875,7 @@ function start_menu(){
 	green " 7. 工具集合"
 	green " 8. DD最新的diban11系统默认密码ffffff"
 	green " 9. 安装Gost"
+	green " 10. VPS测评"
 
     green " 0. exit"
 
