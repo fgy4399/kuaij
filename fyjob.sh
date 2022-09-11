@@ -846,8 +846,6 @@ function upgradeScript(){
 function downLoad(){
 	wget -Nq --no-check-certificate -O ./fyjob.sh "https://raw.githubusercontent.com/fgy4399/kuaij/main/fyjob.sh"
 	chmod +x ./fyjob.sh
-	sleep 2s
-	exec "./fyjob.sh"
 }
 
 
