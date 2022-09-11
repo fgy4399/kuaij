@@ -862,6 +862,46 @@ vpsTest(){
 	bash <(wget -qO- --no-check-certificate https://gitlab.com/spiritysdx/za/-/raw/main/ecs.sh)
 }
 
+ipCut(){
+    ipYuan(){
+    	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/config.json"
+	airu restart
+    }
+    
+    ipWarp(){
+    	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/configWarp.json"
+	airu restart
+    }
+
+
+    green " ========切换访问奈飞出口========"
+    green " 1. 切换Xray原IP出口"
+    green " 2. 切换Xray至Socks5-WARP出口"
+    green " 0. 返回主菜单"
+
+    echo
+    read -p "Please input number:" NumberInput
+    case "$NumberInput" in
+    	
+        	1 )
+          ipYuan
+        ;;
+		2 )
+          ipWarp
+        ;;
+		0 )
+           start_menu
+        ;;
+	
+        	* )
+           clear
+           red "请输入正确数字 !"
+           sleep 2s
+           ipCut
+        ;;
+    esac
+}
+
 function start_menu(){
     downLoad
     clear
@@ -885,6 +925,7 @@ function start_menu(){
 	green " 8. DD最新的diban11系统默认密码ffffff"
 	green " 9. 安装Gost"
 	green " 10. VPS测评"
+	green " 11. 切换访问奈菲出口"
 
     green " 0. exit"
 
@@ -923,6 +964,9 @@ function start_menu(){
         ;;
 		10 )
             vpsTest
+        ;;
+		11 )
+            ipCut
         ;;
         0 )
             exit 1
