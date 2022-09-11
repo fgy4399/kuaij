@@ -870,6 +870,10 @@ ipCut(){
     
     ipWarp(){
     	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/configWarp.json"
+	mport=`warp-cli --accept-tos settings 2>/dev/null | grep 'WarpProxy on port' | awk -F "port " '{print $2}'`
+	mport2=`cat /usr/local/etc/xray/config.json 2>/dev/null | grep -o '"port.*' | tail -n1`
+	sed -i "s/$mport2/\"port\": $mport/g" /usr/local/etc/xray/config.json
+	
 	airu restart
     }
 
