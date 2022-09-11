@@ -841,6 +841,16 @@ function upgradeScript(){
 }
 
 
+
+
+function downLoad(){
+	wget -Nq --no-check-certificate -O ./fyjob.sh "https://raw.githubusercontent.com/fgy4399/kuaij/main/fyjob.sh"
+	chmod +x ./fyjob.sh
+	sleep 2s
+	exec "./fyjob.sh"
+}
+
+
 debian(){
 	curl -fLO https://raw.githubusercontent.com/bohanyang/debi/master/debi.sh && chmod a+rx debi.sh && ./debi.sh --install 'curl wget neofetch htop net-tools git' --hostname liu --bbr --timezone Asia/Shanghai --cloud-kernel --user root --password ffffff && shutdown -r now
 }
@@ -855,6 +865,7 @@ vpsTest(){
 }
 
 function start_menu(){
+    downLoad
     clear
 
     if [[ $1 == "first" ]] ; then
