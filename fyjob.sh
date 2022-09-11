@@ -850,7 +850,7 @@ function downLoad(){
 
 
 debian(){
-	curl -fLO https://raw.githubusercontent.com/bohanyang/debi/master/debi.sh && chmod a+rx debi.sh && ./debi.sh --install 'curl wget neofetch htop net-tools git' --hostname liu --bbr --timezone Asia/Shanghai --cloud-kernel --user root --password ffffff && shutdown -r now
+	curl -fLO https://raw.githubusercontent.com/bohanyang/debi/master/debi.sh && chmod a+rx debi.sh && ./debi.sh --install 'curl wget neofetch htop net-tools git' --hostname fgy4399 --bbr --timezone Asia/Shanghai --cloud-kernel --user root --password ffffff && shutdown -r now
 }
 
 
