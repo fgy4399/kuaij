@@ -591,7 +591,153 @@ function proxy() {
     exit
   fi
 }
+
+##TCP
 function method() {
+  if [ $i -eq 1 ]; then
+    if [ "$is_encrypt" == "nonencrypt" ]; then
+      echo "        \"tcp://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "cdnno" ]; then
+      echo "        \"tcp://:$s_port/$d_ip?host=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peerno" ]; then
+      echo "        \"tcp://:$s_port?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "encrypttls" ]; then
+      echo "        \"tcp://:$s_port\"
+    ],
+    \"ChainNodes\": [
+        \"relay+tls://$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "encryptws" ]; then
+      echo "        \"tcp://:$s_port\"
+	],
+	\"ChainNodes\": [
+    	\"relay+ws://$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "encryptwss" ]; then
+      echo "        \"tcp://:$s_port\"
+	],
+	\"ChainNodes\": [
+		\"relay+wss://$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peertls" ]; then
+      echo "        \"tcp://:$s_port\"
+	],
+	\"ChainNodes\": [
+    	\"relay+tls://:?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peerws" ]; then
+      echo "        \"tcp://:$s_port\"
+	],
+	\"ChainNodes\": [
+    	\"relay+ws://:?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peerwss" ]; then
+      echo "        \"tcp://:$s_port\"
+	],
+	\"ChainNodes\": [
+    	\"relay+wss://:?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "cdnws" ]; then
+      echo "        \"tcp://:$s_port\"
+	],
+	\"ChainNodes\": [
+    	\"relay+ws://$d_ip?host=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "cdnwss" ]; then
+      echo "        \"tcp://:$s_port\"
+	],
+	\"ChainNodes\": [
+    	\"relay+wss://$d_ip?host=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "decrypttls" ]; then
+      if [ -d "$HOME/gost_cert" ]; then
+        echo "        \"relay+tls://:$s_port/$d_ip:$d_port?cert=/root/gost_cert/cert.pem&key=/root/gost_cert/key.pem\"" >>$gost_conf_path
+      else
+        echo "        \"relay+tls://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+      fi
+    elif [ "$is_encrypt" == "decryptws" ]; then
+      echo "        \"relay+ws://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "decryptwss" ]; then
+      if [ -d "$HOME/gost_cert" ]; then
+        echo "        \"relay+wss://:$s_port/$d_ip:$d_port?cert=/root/gost_cert/cert.pem&key=/root/gost_cert/key.pem\"" >>$gost_conf_path
+      else
+        echo "        \"relay+wss://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+      fi
+    elif [ "$is_encrypt" == "ss" ]; then
+      echo "        \"ss://$d_ip:$s_port@:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "socks" ]; then
+      echo "        \"socks5://$d_ip:$s_port@:$d_port\"" >>$gost_conf_path
+    else
+      echo "config error"
+    fi
+  elif [ $i -gt 1 ]; then
+    if [ "$is_encrypt" == "nonencrypt" ]; then
+      echo "                \"tcp://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peerno" ]; then
+      echo "                \"tcp://:$s_port?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "cdnno" ]; then
+      echo "                \"tcp://:$s_port/$d_ip?host=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "encrypttls" ]; then
+      echo "                \"tcp://:$s_port\"
+            ],
+            \"ChainNodes\": [
+                \"relay+tls://$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "encryptws" ]; then
+      echo "                \"tcp://:$s_port\"
+	        ],
+	        \"ChainNodes\": [
+	            \"relay+ws://$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "encryptwss" ]; then
+      echo "                \"tcp://:$s_port\"
+		    ],
+		    \"ChainNodes\": [
+		        \"relay+wss://$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peertls" ]; then
+      echo "                \"tcp://:$s_port\"
+            ],
+            \"ChainNodes\": [
+                \"relay+tls://:?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peerws" ]; then
+      echo "                \"tcp://:$s_port\"
+            ],
+            \"ChainNodes\": [
+                \"relay+ws://:?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "peerwss" ]; then
+      echo "                \"tcp://:$s_port\"
+            ],
+            \"ChainNodes\": [
+                \"relay+wss://:?ip=/root/$d_ip.txt&strategy=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "cdnws" ]; then
+      echo "                \"tcp://:$s_port\"
+            ],
+            \"ChainNodes\": [
+                \"relay+ws://$d_ip?host=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "cdnwss" ]; then
+      echo "                 \"tcp://:$s_port\"
+            ],
+            \"ChainNodes\": [
+                \"relay+wss://$d_ip?host=$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "decrypttls" ]; then
+      if [ -d "$HOME/gost_cert" ]; then
+        echo "        		  \"relay+tls://:$s_port/$d_ip:$d_port?cert=/root/gost_cert/cert.pem&key=/root/gost_cert/key.pem\"" >>$gost_conf_path
+      else
+        echo "        		  \"relay+tls://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+      fi
+    elif [ "$is_encrypt" == "decryptws" ]; then
+      echo "        		  \"relay+ws://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "decryptwss" ]; then
+      if [ -d "$HOME/gost_cert" ]; then
+        echo "        		  \"relay+wss://:$s_port/$d_ip:$d_port?cert=/root/gost_cert/cert.pem&key=/root/gost_cert/key.pem\"" >>$gost_conf_path
+      else
+        echo "        		  \"relay+wss://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
+      fi
+    elif [ "$is_encrypt" == "ss" ]; then
+      echo "        \"ss://$d_ip:$s_port@:$d_port\"" >>$gost_conf_path
+    elif [ "$is_encrypt" == "socks" ]; then
+      echo "        \"socks5://$d_ip:$s_port@:$d_port\"" >>$gost_conf_path
+    else
+      echo "config error"
+    fi
+  else
+    echo "config error"
+    exit
+  fi
+}
+
+##TCP UDP
+function method2() {
   if [ $i -eq 1 ]; then
     if [ "$is_encrypt" == "nonencrypt" ]; then
       echo "        \"tcp://:$s_port/$d_ip:$d_port\",
