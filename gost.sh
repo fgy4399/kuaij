@@ -593,7 +593,7 @@ function proxy() {
 }
 
 ##TCP
-function method() {
+function method2() {
   if [ $i -eq 1 ]; then
     if [ "$is_encrypt" == "nonencrypt" ]; then
       echo "        \"tcp://:$s_port/$d_ip:$d_port\"" >>$gost_conf_path
@@ -737,7 +737,7 @@ function method() {
 }
 
 ##TCP UDP
-function method2() {
+function method() {
   if [ $i -eq 1 ]; then
     if [ "$is_encrypt" == "nonencrypt" ]; then
       echo "        \"tcp://:$s_port/$d_ip:$d_port\",
