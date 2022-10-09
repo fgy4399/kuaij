@@ -807,7 +807,8 @@ function installXUI(){
 
 function installXUI2(){
 
-	bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)
+	### bash <(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)
+	bash <(curl -Ls https://gitlab.com/misakablog/x-ui/-/raw/main/install.sh)
 
 }
 
