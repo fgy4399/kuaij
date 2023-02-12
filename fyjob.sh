@@ -863,6 +863,18 @@ vpsTest(){
 	bash <(wget -qO- --no-check-certificate https://gitlab.com/spiritysdx/za/-/raw/main/ecs.sh)
 }
 
+LMTTest(){
+	bash <(curl -L -s https://raw.githubusercontent.com/lmc999/RegionRestrictionCheck/main/check.sh)
+}
+
+SWHTTest(){
+	curl https://raw.githubusercontent.com/zhucaidan/mtr_trace/main/mtr_trace.sh|bash
+}
+
+SWTest(){
+	bash <(curl -Lso- https://git.io/superspeed_uxh)
+}
+
 ipCut(){
     ipYuan(){
     	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/config.json"
@@ -931,6 +943,9 @@ function start_menu(){
 	green " 9. 安装Gost"
 	green " 10. VPS测评"
 	green " 11. 切换访问奈菲出口"
+	green " 12. 流媒体解锁检测"
+	green " 13. 三网回程测试"
+	green " 14. 三网测速"
 
     green " 0. exit"
 
@@ -972,6 +987,15 @@ function start_menu(){
         ;;
 		11 )
             ipCut
+        ;;
+		12 )
+            LMTTest
+        ;;
+		13 )
+            SWHTTest
+        ;;
+		14 )
+            SWTest
         ;;
         0 )
             exit 1
