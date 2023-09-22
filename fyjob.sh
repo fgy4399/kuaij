@@ -821,7 +821,7 @@ function installWARP(){
 
 function installWARP2(){
 
-	wget -N https://gitlab.com/fscarmen/warp/-/raw/main/api.sh && bash api.sh [option]
+	wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh && bash menu.sh [option] [lisence/url/token]
 
 }
 
