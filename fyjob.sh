@@ -875,6 +875,10 @@ SWTest(){
 	bash <(curl -Lso- https://git.io/superspeed_uxh)
 }
 
+addSwap(){
+	bash <(curl -Lso- https://www.moerats.com/usr/shell/swap.sh)
+}
+
 ipCut(){
     ipYuan(){
     	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/config.json"
@@ -946,6 +950,7 @@ function start_menu(){
 	green " 12. 流媒体解锁检测"
 	green " 13. 三网回程测试"
 	green " 14. 三网测速"
+ 	green " 15. 添加Swap内存"
 
     green " 0. exit"
 
@@ -996,6 +1001,9 @@ function start_menu(){
         ;;
 		14 )
             SWTest
+        ;;
+		15 )
+            addSwap
         ;;
         0 )
             exit 1
