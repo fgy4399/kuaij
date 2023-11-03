@@ -879,6 +879,10 @@ addSwap(){
 	bash <(curl -Lso- https://www.moerats.com/usr/shell/swap.sh)
 }
 
+installAAP(){
+	bash <(curl -Lso- http://www.aapanel.com/script/install-ubuntu_6.0_en.sh aapanel)
+}
+
 ipCut(){
     ipYuan(){
     	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/config.json"
@@ -951,6 +955,7 @@ function start_menu(){
 	green " 13. 三网回程测试"
 	green " 14. 三网测速"
  	green " 15. 添加Swap内存"
+  	green " 16. 安装aapanel面板"
 
     green " 0. exit"
 
@@ -1004,6 +1009,9 @@ function start_menu(){
         ;;
 		15 )
             addSwap
+        ;;
+		16 )
+            installAAP
         ;;
         0 )
             exit 1
