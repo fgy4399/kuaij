@@ -888,6 +888,10 @@ IPCheck(){
 	bash <(curl -sL IP.Check.Place)
 }
 
+NetCheck(){
+	bash <(curl -sL Net.Check.Place)
+}
+
 ipCut(){
     ipYuan(){
     	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/config.json"
@@ -962,6 +966,7 @@ function start_menu(){
  	green " 15. 添加Swap内存"
   	green " 16. 安装aapanel面板"
         green " 17. IP质量体检"
+	green " 18. 网络质量体检"
 
     green " 0. exit"
 
@@ -1022,6 +1027,9 @@ function start_menu(){
 	
 		17 )
             IPCheck
+        ;;
+		18 )
+            NetCheck
         ;;
         0 )
             exit 1
