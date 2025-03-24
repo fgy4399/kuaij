@@ -889,7 +889,7 @@ IPCheck(){
 }
 
 NetCheck(){
-	bash <(curl -sL Net.Check.Place)
+	bash <(curl -sL https://run.NodeQuality.com)
 }
 
 ipCut(){
