@@ -892,6 +892,10 @@ NetCheck(){
 	bash <(curl -sL https://run.NodeQuality.com)
 }
 
+python_manager(){
+	bash <(curl -sL https://raw.githubusercontent.com/fgy4399/kuaij/refs/heads/main/python_manager.sh)
+}
+
 ipCut(){
     ipYuan(){
     	wget -Nq --no-check-certificate -O /usr/local/etc/xray/config.json "https://raw.githubusercontent.com/fgy4399/kuaij/main/xrayConfig/config.json"
@@ -967,6 +971,7 @@ function start_menu(){
   	green " 16. 安装aapanel面板"
         green " 17. IP质量体检"
 	green " 18. 网络质量体检"
+        green " 19. Python管理工具"
 
     green " 0. exit"
 
@@ -1030,6 +1035,9 @@ function start_menu(){
         ;;
 		18 )
             NetCheck
+        ;;
+		19 )
+            python_manager
         ;;
         0 )
             exit 1
