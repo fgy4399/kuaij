@@ -889,7 +889,7 @@ IPCheck(){
 }
 
 NetCheck(){
-	bash <(curl -sL https://run.NodeQuality.com)
+	LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 bash <(curl -sL https://run.NodeQuality.com)
 }
 
 python_manager(){
