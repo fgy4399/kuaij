@@ -940,6 +940,80 @@ ipCut(){
     esac
 }
 
+rcloneTool(){
+
+	# 显示颜色函数
+	green()  { echo -e "\033[32m\033[01m$1\033[0m"; }
+	yellow() { echo -e "\033[33m\033[01m$1\033[0m"; }
+	red()    { echo -e "\033[31m\033[01m$1\033[0m"; }
+
+	# 检查是否安装了 rclone
+	if ! command -v rclone &> /dev/null
+	then
+    		red "rclone 未安装，请安装 rclone 后再运行此脚本"
+    		exit 1
+	fi
+
+	# 功能菜单
+	function show_menu() {
+    		echo
+    		green "====== Rclone 工具 ======"
+    		echo "1. 列出所有 rclone 网盘挂载名"
+    		echo "2. 上传文件/目录到网盘"
+    		echo "0. 退出"
+    		echo "========================="
+    		echo
+    		read -p "请选择操作编号：" choice
+    		case $choice in
+        	1) list_remotes ;;
+        	2) upload_to_remote ;;
+        	0) exit ;;
+        	*) red "无效选项"; show_menu ;;
+    		esac
+	}
+
+	# 功能1：列出已挂载网盘（rclone 配置）
+	function list_remotes() {
+    		green "已配置的 Rclone 网盘列表："
+    		rclone listremotes
+    		show_menu
+	}
+
+	# 功能2：上传本地文件到网盘
+	function upload_to_remote() {
+    		echo
+    		read -p "请输入本地文件或目录路径（默认当前目录）： " local_path
+    		local_path=${local_path:-$(pwd)}
+
+    		read -p "请输入 rclone 网盘名称（如：od、gd、123）： " remote_name
+    		if [ -z "$remote_name" ]; then
+        		red "❌ 网盘名称不能为空"
+        		show_menu
+        		return
+    		fi
+
+    		read -p "请输入网盘中的目标路径（如：backup/files/，默认根目录）： " remote_path
+    		remote_path=${remote_path:-""}
+
+    		# 构建目标路径
+    		target="${remote_name}:${remote_path}"
+
+    		echo
+    		yellow "开始上传..."
+    		echo "本地路径：$local_path"
+    		echo "网盘路径：$target"
+
+    		rclone copy "$local_path" "$target" --progress --transfers=4 --checkers=4
+
+    		green "✅ 上传完成！"
+    		show_menu
+	}
+
+	# 启动脚本
+	show_menu
+
+}
+
 function start_menu(){
     downLoad
     clear
@@ -972,6 +1046,7 @@ function start_menu(){
         green " 17. IP质量体检"
 	green " 18. 网络质量体检"
         green " 19. Python管理工具"
+	green " 20. rclone工具"
 
     green " 0. exit"
 
@@ -1038,6 +1113,9 @@ function start_menu(){
         ;;
 		19 )
             python_manager
+        ;;
+		20 )
+            rcloneTool
         ;;
         0 )
             exit 1
