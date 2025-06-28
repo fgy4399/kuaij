@@ -942,45 +942,244 @@ ipCut(){
 
 rcloneTool(){
 
-	# 显示颜色函数
-	green()  { echo -e "\033[32m\033[01m$1\033[0m"; }
-	yellow() { echo -e "\033[33m\033[01m$1\033[0m"; }
-	red()    { echo -e "\033[31m\033[01m$1\033[0m"; }
-
 	# 检查是否安装了 rclone
 	if ! command -v rclone &> /dev/null
 	then
     		red "rclone 未安装，请安装 rclone 后再运行此脚本"
-    		exit 1
+    		read -p "按任意键返回主菜单..." 
+    		start_menu
+    		return
 	fi
 
 	# 功能菜单
-	function show_menu() {
+	function rclone_show_menu() {
     		echo
     		green "====== Rclone 工具 ======"
     		echo "1. 列出所有 rclone 网盘挂载名"
     		echo "2. 上传文件/目录到网盘"
-    		echo "0. 退出"
+    		echo "0. 返回主菜单"
     		echo "========================="
     		echo
     		read -p "请选择操作编号：" choice
     		case $choice in
-        	1) list_remotes ;;
-        	2) upload_to_remote ;;
-        	0) exit ;;
-        	*) red "无效选项"; show_menu ;;
+        	1) rclone_list_remotes ;;
+        	2) rclone_upload_to_remote ;;
+        	0) start_menu ;;
+        	*) red "无效选项"; rclone_show_menu ;;
     		esac
 	}
 
 	# 功能1：列出已挂载网盘（rclone 配置）
-	function list_remotes() {
+	function rclone_list_remotes() {
     		green "已配置的 Rclone 网盘列表："
     		rclone listremotes
-    		show_menu
+    		echo
+    		read -p "按任意键继续..." 
+    		rclone_show_menu
+	}
+
+		# 交互式浏览网盘目录
+	function rclone_browse_remote_interactive() {
+		local remote_name="$1"
+		local current_path="$2"
+		local result_file="$3"
+		local full_path="${remote_name}:${current_path}"
+		
+		echo
+		green "====== 浏览网盘目录 ======"
+		yellow "当前路径: ${full_path}"
+		echo
+		
+		# 列出当前目录的文件夹
+		echo "目录列表:"
+		yellow "正在获取目录列表..."
+		
+		# 调试：显示完整的rclone lsd输出
+		local dir_output=$(rclone lsd "$full_path" 2>&1)
+		if [[ $? -ne 0 ]]; then
+			red "❌ 获取目录列表失败："
+			echo "$dir_output"
+			echo
+		else
+			echo "$dir_output" | awk 'NF>=4 {print NR". "$(NF)}' | head -20
+			
+			# 如果没有目录，显示提示
+			if [[ -z "$(echo "$dir_output" | awk 'NF>=4 {print $(NF)}')" ]]; then
+				yellow "当前目录下没有子文件夹"
+			fi
+		fi
+		
+		echo
+		echo "操作选项:"
+		echo "输入数字: 进入对应目录"
+		echo "输入 '..' : 返回上级目录"
+		echo "输入 'ok' : 使用当前路径"
+		echo "输入 'exit': 返回路径输入"
+		echo
+		
+		read -p "请选择操作: " browse_choice
+		
+		if [[ "$browse_choice" == "ok" ]]; then
+			echo
+			green "已选择路径: ${full_path}"
+			echo "请选择上传方式:"
+			echo "1. 直接上传到当前路径"
+			echo "2. 在当前路径下创建新文件夹并上传"
+			echo
+			read -p "请选择 [1/2] (默认为1): " upload_choice
+			upload_choice=${upload_choice:-1}
+			
+			if [[ "$upload_choice" == "2" ]]; then
+				read -p "请输入要创建的文件夹名称: " new_folder_name
+				if [[ -n "$new_folder_name" ]]; then
+					if [[ -z "$current_path" ]]; then
+						final_path="$new_folder_name"
+					else
+						final_path="${current_path}/${new_folder_name}"
+					fi
+					green "将上传到: ${remote_name}:${final_path}"
+				else
+					red "❌ 文件夹名称不能为空，使用当前路径"
+					final_path="$current_path"
+				fi
+			else
+				final_path="$current_path"
+			fi
+			
+			echo "$final_path" > "$result_file"
+			return
+		elif [[ "$browse_choice" == "exit" ]]; then
+			echo "CANCEL" > "$result_file"
+			return
+		elif [[ "$browse_choice" == ".." ]]; then
+			# 返回上级目录
+			local parent_path=$(dirname "$current_path")
+			if [[ "$parent_path" == "." ]]; then
+				parent_path=""
+			fi
+			rclone_browse_remote_interactive "$remote_name" "$parent_path" "$result_file"
+		elif [[ "$browse_choice" =~ ^[0-9]+$ ]]; then
+			# 进入选择的目录
+			local dir_name=$(rclone lsd "$full_path" 2>/dev/null | awk 'NF>=4 {print $(NF)}' | sed -n "${browse_choice}p")
+			if [[ -n "$dir_name" ]]; then
+				local new_path
+				if [[ -z "$current_path" ]]; then
+					new_path="$dir_name"
+				else
+					new_path="${current_path}/${dir_name}"
+				fi
+				rclone_browse_remote_interactive "$remote_name" "$new_path" "$result_file"
+			else
+				red "❌ 无效的选择"
+				rclone_browse_remote_interactive "$remote_name" "$current_path" "$result_file"
+			fi
+		else
+			red "❌ 无效的输入"
+			rclone_browse_remote_interactive "$remote_name" "$current_path" "$result_file"
+		fi
+	}
+
+	# 浏览网盘目录（保留原函数用于其他可能的调用）
+	function rclone_browse_remote() {
+		local remote_name="$1"
+		local current_path="$2"
+		local full_path="${remote_name}:${current_path}"
+		
+		echo
+		green "====== 浏览网盘目录 ======"
+		yellow "当前路径: ${full_path}"
+		echo
+		
+		# 列出当前目录的文件夹
+		echo "目录列表:"
+		yellow "正在获取目录列表..."
+		
+		# 调试：显示完整的rclone lsd输出
+		local dir_output=$(rclone lsd "$full_path" 2>&1)
+		if [[ $? -ne 0 ]]; then
+			red "❌ 获取目录列表失败："
+			echo "$dir_output"
+			echo
+		else
+			echo "$dir_output" | awk 'NF>=4 {print NR". "$(NF)}' | head -20
+			
+			# 如果没有目录，显示提示
+			if [[ -z "$(echo "$dir_output" | awk 'NF>=4 {print $(NF)}')" ]]; then
+				yellow "当前目录下没有子文件夹"
+			fi
+		fi
+		
+		echo
+		echo "操作选项:"
+		echo "输入数字: 进入对应目录"
+		echo "输入 '..' : 返回上级目录"
+		echo "输入 'ok' : 使用当前路径"
+		echo "输入 'exit': 返回路径输入"
+		echo
+		
+		read -p "请选择操作: " browse_choice
+		
+		if [[ "$browse_choice" == "ok" ]]; then
+			echo
+			green "已选择路径: ${full_path}"
+			echo "请选择上传方式:"
+			echo "1. 直接上传到当前路径"
+			echo "2. 在当前路径下创建新文件夹并上传"
+			echo
+			read -p "请选择 [1/2] (默认为1): " upload_choice
+			upload_choice=${upload_choice:-1}
+			
+			if [[ "$upload_choice" == "2" ]]; then
+				read -p "请输入要创建的文件夹名称: " new_folder_name
+				if [[ -n "$new_folder_name" ]]; then
+					if [[ -z "$current_path" ]]; then
+						final_path="$new_folder_name"
+					else
+						final_path="${current_path}/${new_folder_name}"
+					fi
+					green "将上传到: ${remote_name}:${final_path}"
+					echo "$final_path"
+				else
+					red "❌ 文件夹名称不能为空，使用当前路径"
+					echo "$current_path"
+				fi
+			else
+				echo "$current_path"
+			fi
+			return
+		elif [[ "$browse_choice" == "exit" ]]; then
+			echo "CANCEL"
+			return
+		elif [[ "$browse_choice" == ".." ]]; then
+			# 返回上级目录
+			local parent_path=$(dirname "$current_path")
+			if [[ "$parent_path" == "." ]]; then
+				parent_path=""
+			fi
+			rclone_browse_remote "$remote_name" "$parent_path"
+		elif [[ "$browse_choice" =~ ^[0-9]+$ ]]; then
+			# 进入选择的目录
+			local dir_name=$(rclone lsd "$full_path" 2>/dev/null | awk 'NF>=4 {print $(NF)}' | sed -n "${browse_choice}p")
+			if [[ -n "$dir_name" ]]; then
+				local new_path
+				if [[ -z "$current_path" ]]; then
+					new_path="$dir_name"
+				else
+					new_path="${current_path}/${dir_name}"
+				fi
+				rclone_browse_remote "$remote_name" "$new_path"
+			else
+				red "❌ 无效的选择"
+				rclone_browse_remote "$remote_name" "$current_path"
+			fi
+		else
+			red "❌ 无效的输入"
+			rclone_browse_remote "$remote_name" "$current_path"
+		fi
 	}
 
 	# 功能2：上传本地文件到网盘
-	function upload_to_remote() {
+	function rclone_upload_to_remote() {
     		echo
     		read -p "请输入本地文件或目录路径（默认当前目录）： " local_path
     		local_path=${local_path:-$(pwd)}
@@ -988,15 +1187,62 @@ rcloneTool(){
     		read -p "请输入 rclone 网盘名称（如：od、gd、123）： " remote_name
     		if [ -z "$remote_name" ]; then
         		red "❌ 网盘名称不能为空"
-        		show_menu
+        		rclone_show_menu
         		return
     		fi
 
-    		read -p "请输入网盘中的目标路径（如：backup/files/，默认根目录）： " remote_path
-    		remote_path=${remote_path:-""}
+		# 验证网盘名称是否存在
+		if ! rclone listremotes | grep -q "^${remote_name}:$"; then
+			red "❌ 网盘名称 '$remote_name' 不存在"
+			yellow "可用的网盘列表:"
+			rclone listremotes
+			echo
+			read -p "按任意键继续..." 
+			rclone_show_menu
+			return
+		fi
 
-    		# 构建目标路径
-    		target="${remote_name}:${remote_path}"
+		echo
+		green "是否需要浏览网盘目录来选择路径？"
+		read -p "输入 [Y/n] (默认为否，直接输入路径): " browse_choice
+		browse_choice=${browse_choice:-n}
+		
+		if [[ $browse_choice == [Yy] ]]; then
+			# 创建临时文件来存储选择的路径
+			local temp_path_file="/tmp/rclone_selected_path_$$"
+			rclone_browse_remote_interactive "$remote_name" "" "$temp_path_file"
+			
+			if [[ -f "$temp_path_file" ]]; then
+				remote_path=$(cat "$temp_path_file")
+				rm -f "$temp_path_file"
+				
+				if [[ "$remote_path" == "CANCEL" ]]; then
+					echo "已取消浏览，请手动输入路径"
+					remote_path=""
+				else
+					echo
+					green "已选择路径: $remote_path"
+				fi
+			else
+				echo "浏览过程中出现错误"
+				remote_path=""
+			fi
+		fi
+		
+		if [[ -z "$remote_path" ]]; then
+			read -p "请输入网盘中的目标路径（如：backup/files/，默认根目录）： " remote_path
+		fi
+		
+		remote_path=${remote_path:-""}
+
+    		# 构建目标路径，确保路径格式正确
+    		if [[ -n "$remote_path" ]]; then
+    			# 移除路径末尾的斜杠，然后统一添加
+    			remote_path=$(echo "$remote_path" | sed 's/\/*$//')
+    			target="${remote_name}:${remote_path}/"
+    		else
+    			target="${remote_name}:"
+    		fi
 
     		echo
     		yellow "开始上传..."
@@ -1006,16 +1252,17 @@ rcloneTool(){
     		rclone copy "$local_path" "$target" --progress --transfers=4 --checkers=4
 
     		green "✅ 上传完成！"
-    		show_menu
+    		echo
+    		read -p "按任意键继续..." 
+    		rclone_show_menu
 	}
 
 	# 启动脚本
-	show_menu
+	rclone_show_menu
 
 }
 
 function start_menu(){
-    downLoad
     clear
 
     if [[ $1 == "first" ]] ; then
